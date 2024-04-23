@@ -3,7 +3,8 @@ require 'sqlite3'
 
 
 # Conecta-se ao banco de dados
-DB = SQLite3::Database.new('usuarios.db')
+
+DB = SQLite3::Database.new('usuarios.db', results_as_hash: true)
 
 # Rota para exibir todos os usuários
 get '/usuarios' do
