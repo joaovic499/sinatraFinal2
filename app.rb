@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sqlite3'
 
+
 # Conecta-se ao banco de dados
 DB = SQLite3::Database.new('usuarios.db')
 
@@ -8,6 +9,10 @@ DB = SQLite3::Database.new('usuarios.db')
 get '/usuarios' do
   @usuarios = DB.execute('SELECT * FROM usuarios')
   erb :usuarios
+end
+
+get '/' do
+    erb :index
 end
 
 # Rota para exibir o formulário de criação de usuário
@@ -28,14 +33,14 @@ end
 get '/usuarios/:id' do
   id = params['id']
   @usuario = DB.execute('SELECT * FROM usuarios WHERE id = ?', id).first
-  erb :detalhes_usuario
+  erb :detalhes_usuarios
 end
 
 # Rota para exibir o formulário de edição de um usuário
 get '/usuarios/:id/editar' do
   id = params['id']
   @usuario = DB.execute('SELECT * FROM usuarios WHERE id = ?', id).first
-  erb :editar_usuario
+  erb :editar_usuarios
 end
 
 # Rota para lidar com a atualização de um usuário
@@ -49,7 +54,7 @@ put '/usuarios/:id' do
 end
 
 # Rota para lidar com a exclusão de um usuário
-delete '/usuarios/:id' do
+delete '/usuarios/:id/excluir' do
   id = params['id']
   DB.execute('DELETE FROM usuarios WHERE id = ?', id)
   redirect '/usuarios'
