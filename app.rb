@@ -2,6 +2,7 @@ require 'sinatra'
 require 'sqlite3'
 
 
+
 # Conecta-se ao banco de dados
 
 DB = SQLite3::Database.new('usuarios.db', results_as_hash: true)

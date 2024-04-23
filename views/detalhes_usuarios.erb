@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Detalhes do Usuário</title>
+  <title>Lista do Usuário</title>
 </head>
 <body>
-  <h1>Detalhes do Usuário</h1>
-  <p>Nome: <%= @usuario['nome'] %></p>
-  <p>Código: <%= @usuario['codigo'] %></p>
+
+  <h1>Usuario Editado com Sucesso!</h1>
+  <p> Nome: <%= @usuario['nome'] %></p>
+  <p> Código: <%= @usuario['codigo'] %></p>
+  
+  <p> <a href="/usuarios"> Voltar para a Lista de Usuarios </a> <p>
+  <p> <a href="/"> Voltar para Home </a> <p>
 </body>
 </html>

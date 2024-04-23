@@ -9,8 +9,23 @@
     <% @usuarios.each do |usuario| %>
       <li> <%= usuario['nome'] %> </li>
       <li> <%= usuario['codigo'] %> </li>
-      <br>
-    <% end %>
+      <form action="/usuarios/<%= usuario['id'] %>/editar" method="PUT">
+      <input type="hidden" name="_method" value="PUT">
+      <input type="submit" value="Editar">
+      </form>
+      <form action="/usuarios/<%= usuario['id'] %>/excluir" method="POST" style="display: inline;">
+      <input type="hidden" name="_method" value="DELETE">
+      <input type="submit" value="Excluir">
+  </form>
+  <BR>
+  <BR>
+  <BR>
+  <BR>
+        <% end %>
+    
+    <p> <a href="/"> Voltar para Home </a> <p>
+    <p> <a href="usuarios/novo"> Cadastrar novo Usuario </a> <p>
   </ul>
 </body>
 </html>
+
