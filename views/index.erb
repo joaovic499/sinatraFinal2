@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bem-vindo ao meu aplicativo CRUD de usuários</title>
+</head>
+<body>
+  <h1>Bem-vindo ao meu aplicativo CRUD de usuários</h1>
+  
+  <h2>Criar Novo Usuário</h2>
+  <form action="/usuarios/novo" method="post">
+    Nome: <input type="text" name="nome"><br>
+    Senha: <input type="password" name="senha"><br>
+    Código: <input type="text" name="codigo"><br>
+    <input type="submit" value="Criar">
+  </form>
+  
+  <hr>
+  
+  <h2>Lista de Usuários</h2>
+  <ul>
+    <% @usuarios.each do |usuario| %>
+      <li><%= usuario['nome'] %></li>
+    <% end %>
+  </ul>
+  
+</body>
+</html>
