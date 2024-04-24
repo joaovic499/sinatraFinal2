@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Trocar a Senha do usuario></title>
+</head>
+<body>
+  <h1>Trocar a senha do usuario</h1>
+ 
+  <form action="/usuarios/<%= @usuario['id'] %>" method="post">
+  <input type="hidden" name="_method" value="put">
+  <input type="hidden" name="id" value="<%= @usuario['id'] %>">
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" name="nome" value="<%= @usuario['nome'] %>"><br>
+    <label for="nome">Senha Atual:</label>
+    <input type="password" id="senha_atual" name="senha_atual"><br>
+    <label for="nome">Nova Senha:</label>
+    <input type="password" id="nova_senha" name="nova_senha"><br>
+    <label for="nome">Confirme a Senha:</label>
+    <input type="password" id="confirmar_senha" name="confirmar_senha"><br>
+    <input type="submit" value="Trocar Senha">
+    </form>
+</body>
+</html>

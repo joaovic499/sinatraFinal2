@@ -7,10 +7,13 @@
   <h1>Editar Usuário</h1>
   <form action="/usuarios/<%= @usuario['id'] %>" method="post">
     Nome: <input type="text" name="nome" value="<%= @usuario['nome'] %>"><br>
-    Senha: <input type="text" name="senha" value="<%= @usuario['senha'] %>"><br>
     Código: <input type="text" name="codigo" value="<%= @usuario['codigo'] %>"><br>
     <input type="hidden" name="_method" value="put">
     <input type="submit" value="Salvar">
     </form>
+        <form action="/usuarios/<%= @usuario['id'] %>/trocarSenha" method="PUT" style="display: inline;">
+      <input type="hidden" name="_method" value="PUT">
+      <input type="submit" value="Trocar Senha">
+  </form>
 </body>
 </html>

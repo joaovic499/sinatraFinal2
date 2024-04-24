@@ -1,9 +1,6 @@
 require 'sinatra'
 require 'sqlite3'
-
-
-
-# Conecta-se ao banco de dados
+require'bcrypt'
 
 DB = SQLite3::Database.new('usuarios.db', results_as_hash: true)
 
@@ -17,6 +14,13 @@ get '/' do
     erb :index
 end
 
+# Rota para alterar apenas a Senha
+get '/usuarios/:id/trocarSenha' do
+    @usuario = DB.execute('SELECT * FROM usuarios WHERE id = ?', params['id']).first
+    erb :nova_senha
+end
+
+
 # Rota para exibir o formulário de criação de usuário
 get '/usuarios/novo' do
   erb :novo_usuario
@@ -25,7 +29,7 @@ end
 # Rota para lidar com a criação de um novo usuário
 post '/usuarios' do
   nome = params['nome']
-  senha = params['senha']
+  senha = BCrypt::Password.create(['senha']).to_s
   codigo = params['codigo']
   DB.execute('INSERT INTO usuarios (nome, senha, codigo) VALUES (?, ?, ?)', [nome, senha, codigo])
   redirect '/usuarios'
@@ -49,10 +53,24 @@ end
 put '/usuarios/:id' do
   id = params['id']
   nome = params['nome']
-  senha = params['senha']
-  codigo = params['codigo']
-  DB.execute('UPDATE usuarios SET nome = ?, senha = ?, codigo = ? WHERE id = ?', [nome, senha, codigo, id])
-  redirect "/usuarios/#{id}"
+  senha_atual = params['senha_atual']
+  nova_senha = params['nova_senha']
+  confirmar_senha = params['confirmar_senha']
+
+  if nova_senha != confirmar_senha
+    redirect "/usuarios/#{id}/trocarSenha?erro= Senhas não correspondentes"
+  end
+
+  usuario = DB.execute('SELECT senha FROM usuarios WHERE id= ?', id).first
+  if BCrypt::Password.new(usuario['senha']) == senha_atual
+    nova_senha_criptografada = BCrypt::Password.create(nova_senha)
+    DB.execute('UPDATE usuarios SET nome= ?, senha=? WHERE id = ?', [nome, nova_senha_criptografada, id])
+    redirect "/usuarios/#{id}"
+  else
+    redirect "/usuarios/#{id}/trocarSenha?erro= Senha atual Incorreta"
+  end
+
+
 end
 
 # Rota para lidar com a exclusão de um usuário
