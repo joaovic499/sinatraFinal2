@@ -54,7 +54,6 @@ put '/usuarios/:id' do
   id = params['id']
   nome = params['nome']
   senha_atual_do_banco = DB.execute('SELECT senha FROM usuarios WHERE id = ?', id).first
-  puts senha_atual_do_banco
   senha_atual_do_usuario = params['senha_atual_do_usuario']
   nova_senha = params['nova_senha']
   confirmar_senha = params['confirmar_senha']
