@@ -53,7 +53,9 @@ end
 put '/usuarios/:id' do
   id = params['id']
   nome = params['nome']
-  senha_atual = params['senha_atual']
+  senha_atual_do_banco = DB.execute('SELECT senha FROM usuarios WHERE id = ?', id).first
+  puts senha_atual_do_banco
+  senha_atual_do_usuario = params['senha_atual_do_usuario']
   nova_senha = params['nova_senha']
   confirmar_senha = params['confirmar_senha']
 
@@ -61,10 +63,10 @@ put '/usuarios/:id' do
     redirect "/usuarios/#{id}/trocarSenha?erro= Senhas não correspondentes"
   end
 
-  usuario = DB.execute('SELECT senha FROM usuarios WHERE id= ?', id).first
-  if BCrypt::Password.new(usuario['senha']) == senha_atual
+
+  if BCrypt::Password.new(senha_atual_do_banco['senha']) == senha_atual_do_usuario
     nova_senha_criptografada = BCrypt::Password.create(nova_senha)
-    DB.execute('UPDATE usuarios SET nome= ?, senha=? WHERE id = ?', [nome, nova_senha_criptografada, id])
+    DB.execute('UPDATE usuarios SET nome= ?, codigo= ?, senha=? WHERE id = ?', [nome, codigo, nova_senha_criptografada, id])
     redirect "/usuarios/#{id}"
   else
     redirect "/usuarios/#{id}/trocarSenha?erro= Senha atual Incorreta"
