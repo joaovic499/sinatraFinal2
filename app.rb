@@ -29,7 +29,7 @@ end
 # Rota para lidar com a criação de um novo usuário
 post '/usuarios' do
   nome = params['nome']
-  senha = BCrypt::Password.create(['senha']).to_s
+  senha = BCrypt::Password.create(params['senha']).to_s
   codigo = params['codigo']
   DB.execute('INSERT INTO usuarios (nome, senha, codigo) VALUES (?, ?, ?)', [nome, senha, codigo])
   redirect '/usuarios'
@@ -53,23 +53,34 @@ end
 put '/usuarios/:id' do
   id = params['id']
   nome = params['nome']
-  senha_atual_do_banco = DB.execute('SELECT senha FROM usuarios WHERE id = ?', id).first
-  senha_atual_do_usuario = params['senha_atual_do_usuario']
+  codigo = params['codigo']
+
+  DB.execute('UPDATE usuarios SET nome = ?, codigo = ? WHERE id = ?', nome, codigo, id)
+  redirect "/usuarios/#{id}"
+
+end
+
+#ROTA PARA ATUALIZAR A SENHA
+put '/usuarios/:id/trocarSenha' do
+  id = params['id']
+  senha_atual = params['senha_atual']
   nova_senha = params['nova_senha']
   confirmar_senha = params['confirmar_senha']
 
-  if nova_senha != confirmar_senha
-    redirect "/usuarios/#{id}/trocarSenha?erro= Senhas não correspondentes"
-  end
+  usuario = DB.execute('SELECT senha FROM usuarios WHERE id = ?', id, senha).first
 
 
-  if BCrypt::Password.new(senha_atual_do_banco['senha']) == senha_atual_do_usuario
+  if BCrypt::Password.new(usuario['senha']) == senha_atual
+    if nova_senha == confirmar_senha
     nova_senha_criptografada = BCrypt::Password.create(nova_senha)
-    DB.execute('UPDATE usuarios SET nome= ?, codigo= ?, senha=? WHERE id = ?', [nome, codigo, nova_senha_criptografada, id])
+    DB.execute('UPDATE usuarios SET senha = ? WHERE id = ?', nova_senha_criptografada, id)
     redirect "/usuarios/#{id}"
   else
-    redirect "/usuarios/#{id}/trocarSenha?erro= Senha atual Incorreta"
+    redirect "/usuarios/#{id}/trocarSenha?erro=Senhas nao correpondem"
   end
+else
+  redirect "/usuarios/#{id}/trocarSenha?erro=Senhas Atual nao correspondem"
+end
 
 
 end
